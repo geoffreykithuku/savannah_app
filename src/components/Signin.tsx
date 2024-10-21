@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useAuth } from '../context/AuthContext';
 
 const Signin = () => {
   const navigate = useNavigate();
@@ -9,6 +10,7 @@ const Signin = () => {
     password: '',
   });
   const [error, setError] = useState('');
+  const { setUser, setAuthToken } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -29,6 +31,13 @@ const Signin = () => {
       });
 
       if (response.ok) {
+        const { user, token } = await response.json();
+        setUser(user);
+        setAuthToken(token);
+        // save user and token to local storage
+        localStorage.setItem('user', JSON.stringify(user));
+
+        localStorage.setItem('authToken', token);
         toast.success('Signin successful');
         navigate('/');
       } else {

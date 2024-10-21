@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useAuth } from '../context/AuthContext';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -13,6 +14,8 @@ const Signup = () => {
   });
   const [error, setError] = useState('');
 
+  const { setUser, setAuthToken } = useAuth();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -23,8 +26,8 @@ const Signup = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-        setError('Passwords do not match');
-        toast.error('Passwords do not match');
+      setError('Passwords do not match');
+      toast.error('Passwords do not match');
       return;
     }
 
@@ -35,17 +38,24 @@ const Signup = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-        if (response.ok) {
+      if (response.ok) {
+        const { user, token } = await response.json();
+        setUser(user);
+        setAuthToken(token);
+        // save user and token to local storage
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('authToken', token);
+
         toast.success('Signup successful');
-        navigate('/signin');
+        navigate('/');
       } else {
         const errorData = await response.json();
-            setError(errorData.msg || 'Signup failed');
+        setError(errorData.msg || 'Signup failed');
         toast.error(errorData.msg || 'Signup failed');
       }
     } catch (err) {
-        setError('Network error');
-        toast.error('Network error');
+      setError('Network error');
+      toast.error('Network error');
     }
   };
 
