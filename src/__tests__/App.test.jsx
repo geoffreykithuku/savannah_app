@@ -1,10 +1,15 @@
-// src/__tests__/App.test.jsx
 import { render, screen } from '@testing-library/react';
 import App from '../App';
+import { AuthProvider } from '../context/AuthContext'; // Import AuthProvider
 
 // sample passing test
-
 test('renders app', () => {
-  render(<App />);
-  expect(true).toBe(true);
+  render(
+    <AuthProvider>
+      {' '}
+     
+      <App />
+    </AuthProvider>
+  );
+  expect(true).toBe(true); 
 });
