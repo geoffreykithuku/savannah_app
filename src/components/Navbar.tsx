@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
-// Define the Navbar component
+
 const Navbar: React.FC = () => {
   // State for controlling the menu toggle (open/close)
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -14,7 +14,7 @@ const Navbar: React.FC = () => {
 
   return (
     <div className="bg-[#351D5B] text-white px-5 sm:px-10 md:px-20 flex w-full items-center justify-between py-6 relative">
-      <h2>SIL API Documentation</h2>
+      <h2>SIL APP</h2>
 
       <div className="w-full mx-auto">
         <ul
@@ -41,7 +41,7 @@ const Navbar: React.FC = () => {
               }}
               to="/unsplash"
             >
-              Unsplash API
+              
             </NavLink>
           </li>
           <li>
