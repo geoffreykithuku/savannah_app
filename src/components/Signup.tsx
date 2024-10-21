@@ -111,7 +111,7 @@ const Signup = () => {
         </form>
         <p className="text-center">
           Already have an account?{' '}
-          <NavLink to="/signin" className="text-[#9FC315]">
+          <NavLink to="/login" className="text-[#9FC315]">
             Sign In
           </NavLink>
         </p>
