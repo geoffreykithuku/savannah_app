@@ -10,19 +10,20 @@ import Footer from './components/Footer';
 import Signin from './components/Signin';
 import Signup from './components/Signup';
 import PrivateRoute from './components/PrivateRoute';
+import { useAuth } from './context/AuthContext';
 
 const App = () => {
+  const { user } = useAuth();
   return (
     <>
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route element={<PrivateRoute />}>
-            <Route path="/" element={<Home />} />
-          </Route>
-          <Route path="/about" element={<Landing />} />
+          <Route path="/" element={user ? <Home /> : <Landing />} />
+          <Route element={<PrivateRoute />}></Route>
           <Route path="/login" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/about" element={<Landing />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <ToastContainer />

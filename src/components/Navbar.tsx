@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const { user, authToken, setUser, setAuthToken } = useAuth();
+  const { user, setUser, setAuthToken } = useAuth();
 
   //  toggle the menu state
   const toggleMenu = (): void => {
