@@ -85,19 +85,13 @@ const Navbar: React.FC = () => {
                   Photos
                 </NavLink>
               </li>
-              <li>
-                <NavLink
-                  className="hover:text-[#9FC315]"
-                  style={({ isActive }: { isActive: boolean }) => {
-                    return isActive ? { color: '#9FC315' } : {};
-                  }}
-                  to="/photos"
-                >
-                  Photos
-                </NavLink>
-              </li>
-              <li onClick={handleLogout} className="hover:text-[#9FC315]">
-                Logout {user?.username}
+
+              <li
+                role="button"
+                onClick={handleLogout}
+                className="hover:text-[#9FC315]"
+              >
+                logout ({user?.username})
               </li>
             </>
           ) : (

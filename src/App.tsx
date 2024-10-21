@@ -9,6 +9,7 @@ import Landing from './pages/Landing';
 import Footer from './components/Footer';
 import Signin from './components/Signin';
 import Signup from './components/Signup';
+import PrivateRoute from './components/PrivateRoute';
 
 const App = () => {
   return (
@@ -16,7 +17,9 @@ const App = () => {
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/" element={<Home />} />
+          </Route>
           <Route path="/about" element={<Landing />} />
           <Route path="/login" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
