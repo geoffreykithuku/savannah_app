@@ -57,6 +57,7 @@ const Signup = () => {
     } catch (err) {
       setError('Network error');
       toast.error('Network error');
+      console.log(err);
     }
   };
 

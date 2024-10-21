@@ -47,6 +47,6 @@ const Landing = () => {
       </section>
     </div>
   );
-}
+};
 
-export default Landing
+export default Landing;

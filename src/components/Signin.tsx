@@ -48,6 +48,7 @@ const Signin = () => {
       }
     } catch (err) {
       setError('Network error');
+      console.log(err);
       toast.error('Network error');
     }
   };
