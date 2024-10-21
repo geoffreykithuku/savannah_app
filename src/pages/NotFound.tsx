@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 
 const NotFound: React.FC = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[#351D5B] text-white border-t border-b">
+    <div className="flex items-center justify-center min-h-screen bg-white text-[#351D5B] border-t border-b">
       <div className="text-center">
         <h1 className="text-8xl font-bold mb-4">404</h1>
         <h2 className="text-2xl font-semibold mb-6">Page Not Found</h2>
