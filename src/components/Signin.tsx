@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Signin = () => {
   const navigate = useNavigate();
@@ -28,13 +29,16 @@ const Signin = () => {
       });
 
       if (response.ok) {
+        toast.success('Signin successful');
         navigate('/');
       } else {
         const errorData = await response.json();
         setError(errorData.msg || 'Signin failed');
+        toast.error(errorData.msg || 'Signin failed');
       }
     } catch (err) {
       setError('Network error');
+      toast.error('Network error');
     }
   };
 

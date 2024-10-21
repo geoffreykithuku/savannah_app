@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -22,7 +23,8 @@ const Signup = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+        setError('Passwords do not match');
+        toast.error('Passwords do not match');
       return;
     }
 
@@ -33,14 +35,17 @@ const Signup = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      if (response.ok) {
+        if (response.ok) {
+        toast.success('Signup successful');
         navigate('/signin');
       } else {
         const errorData = await response.json();
-        setError(errorData.msg || 'Signup failed');
+            setError(errorData.msg || 'Signup failed');
+        toast.error(errorData.msg || 'Signup failed');
       }
     } catch (err) {
-      setError('Network error');
+        setError('Network error');
+        toast.error('Network error');
     }
   };
 
