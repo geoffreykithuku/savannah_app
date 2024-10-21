@@ -13,7 +13,12 @@ const Navbar: React.FC = () => {
 
   return (
     <div className="bg-[#351D5B] text-white px-5 sm:px-10 md:px-20 flex w-full items-center justify-between py-6 relative">
-      <h2 className="flex-shrink-0 z-10">SIL APP</h2>
+          <h2 className="flex-shrink-0 z-10">
+              <NavLink to="/" className="text-xl font-bold">
+                  SIL APP
+              </NavLink>
+              
+      </h2>
 
       <div className="w-full mx-auto">
         <ul

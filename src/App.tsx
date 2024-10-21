@@ -3,6 +3,7 @@ import Home from './pages/Home';
 import Navbar from './components/Navbar';
 import NotFound from './pages/NotFound';
 import Landing from './pages/Landing';
+import Footer from './components/Footer';
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
           <Route path="/about" element={<Landing />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </>
   );
