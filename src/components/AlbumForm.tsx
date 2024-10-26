@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 interface AlbumFormProps {
     album: { id: number; title: string } | null;
-    userId: number;
+    userId: string;
     onSuccess: () => void;
 }
     

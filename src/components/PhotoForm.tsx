@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import api from '../hooks/api';
 interface PhotoFormProps {
-    photo: { id: number; title: string; url: string } | null;
-    albumId: number;
+    photo: { _id: number; title: string; url: string } | null;
+    albumId: string;
     onSuccess: () => void;
 }
 
@@ -16,22 +17,24 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photo, albumId, onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/photos${isEditMode ? `/${photo?.id}` : ''}`,
-        {
-          method: isEditMode ? 'PUT' : 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, albumId, url: imageUrl }),
+        const response = await api.post(
+            `/photos${
+            isEditMode ? `/${photo?._id}` : ''
+            }`,
+            {
+            title,
+            url: imageUrl,
+            albumId,
+            }
+        );
+        if (response.status === 201) {
+            toast.success(isEditMode ? 'Photo updated' : 'Photo created');
+            onSuccess();
+            navigate('/albums');
+        } else {
+            const errorData = response.data;
+            toast.error(errorData.msg || 'Operation failed');
         }
-      );
-      if (response.ok) {
-        toast.success(isEditMode ? 'Photo updated' : 'Photo created');
-        onSuccess();
-        navigate(`/albums/${albumId}`);
-      } else {
-        const errorData = await response.json();
-        toast.error(errorData.msg || 'Operation failed');
-      }
     } catch (error) {
       toast.error('Network error');
       console.error(error);
