@@ -48,7 +48,7 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 px-5 sm:px-10 md:px-20">
+    <div className="min-h-screen bg-gray-100 px-5 sm:px-10 md:px-20 w-full">
       <h1 className="text-xl font-bold py-6 text-[#351D5B]">
         Users along with their albums
       </h1>
@@ -56,7 +56,7 @@ const Home = () => {
       {loading ? (
         <LoadingSpinner loading={loading} />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full">
           {users.map((user) => (
             <Link
               to={`/users/${user._id}`}
@@ -71,7 +71,6 @@ const Home = () => {
               <p className="mt-2">
                 <strong>Albums:</strong> {getUserAlbumCount(user?._id)}
               </p>
-              
             </Link>
           ))}
         </div>

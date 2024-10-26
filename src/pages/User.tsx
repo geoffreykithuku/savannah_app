@@ -1,12 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../hooks/api';
+import LoadingSpinner from '../components/Spinner';
 
-const backend_url = import.meta.env.VITE_BACKEND_URL as string;
+type User = {
+  _id: string;
+  name: string;
+  email: string;
+  username: string;
+};
 
 const UserDetails = () => {
   const { id } = useParams();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [albums, setAlbums] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -14,13 +20,11 @@ const UserDetails = () => {
     const fetchUserData = async () => {
       try {
         // Fetch user details
-        const userResponse = await axios.get(`${backend_url}/api/users/${id}`);
+        const userResponse = await api.get(`/users/${id}`);
         setUser(userResponse.data);
 
         // Fetch user's albums
-        const albumsResponse = await axios.get(
-          `${backend_url}/api/albums?userId=${id}`
-        );
+        const albumsResponse = await api.get(`/albums/user/${id}`);
         setAlbums(albumsResponse.data);
       } catch (error) {
         console.error('Error fetching user or albums:', error);
@@ -32,15 +36,12 @@ const UserDetails = () => {
     fetchUserData();
   }, [id]);
 
-  if (loading) {
-    return <p className="text-center">Loading user information...</p>;
-  }
-
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gray-100 px-5 sm:px-10 md:px-20">
+      {loading ? <LoadingSpinner loading={loading} /> : null}
       {user && (
         <>
-          <h1 className="text-2xl font-bold text-center mb-6 text-[#351D5B]">
+          <h1 className="text-xl font-bold  py-6 text-[#351D5B]">
             {user.name}'s Profile
           </h1>
           <div className="bg-white p-6 rounded shadow mb-6">
@@ -51,33 +52,22 @@ const UserDetails = () => {
             <p>
               <strong>Username:</strong> {user.username}
             </p>
-            <p>
-              <strong>Phone:</strong> {user.phone}
-            </p>
-            <p>
-              <strong>Website:</strong>{' '}
-              <a
-                href={`http://${user.website}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {user.website}
-              </a>
-            </p>
-            <p>
-              <strong>Company:</strong> {user.company.name}
-            </p>
           </div>
 
           <h2 className="text-xl font-bold mb-4 text-[#351D5B]">Albums</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {albums.map((album) => (
-              <div key={album.id} className="p-4 bg-white rounded shadow">
-                <h3 className="text-lg font-bold text-[#351D5B]">
-                  {album?.title}
-                </h3>
-              </div>
-            ))}
+            {albums.length > 0 ? (
+              albums.map((album: any) => (
+                <div key={album._id} className="bg-white p-6 rounded shadow">
+                  <h3 className="text-lg font-semibold text-[#351D5B]">
+                    {album.title}
+                  </h3>
+                  <p>{album.description}</p>
+                </div>
+              ))
+            ) : (
+              <p>No albums found</p>
+            )}
           </div>
         </>
       )}
