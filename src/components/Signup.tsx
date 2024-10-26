@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { ClipLoader } from 'react-spinners';
 import { useAuth } from '../context/AuthContext';
 const backend_url = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -123,7 +124,13 @@ const Signup = () => {
             type="submit"
             className="w-full py-2 bg-[#9FC315] hover:bg-[#8DB40F] rounded text-white font-bold"
           >
-            {loading ? 'Signing up...' : 'Sign Up'}
+            {loading ? (
+              <span>
+                <ClipLoader color="#fff" size={20} /> Signing up...
+              </span>
+            ) : (
+              'Sign Up'
+            )}
           </button>
         </form>
         <p className="text-center">

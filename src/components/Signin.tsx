@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { ClipLoader } from 'react-spinners';
 import { useAuth } from '../context/AuthContext';
 const backend_url = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -43,7 +44,6 @@ const Signin = () => {
         toast.success('Signin successful');
         navigate('/');
       } else {
-
         const errorData = response.data;
         setError(errorData.msg || 'Signin failed');
         toast.error(errorData.msg || 'Signin failed');
@@ -88,7 +88,14 @@ const Signin = () => {
             type="submit"
             className="w-full py-2 bg-[#9FC315] hover:bg-[#8DB40F] rounded text-white font-bold"
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? (
+              <span className="flex justify-center items-center gap-5">
+                <ClipLoader color="#ffffff" loading={loading} size={20} />
+                <span className="ml-2">Signing in...</span>
+              </span>
+            ) : (
+              'Sign In'
+            )}
           </button>
         </form>
         <p className="text-center">
