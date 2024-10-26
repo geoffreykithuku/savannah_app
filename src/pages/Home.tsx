@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../hooks/api';
+import LoadingSpinner from '../components/Spinner';
 
 const backend_url = import.meta.env.VITE_BACKEND_URL as string;
 type User = {
@@ -9,9 +10,13 @@ type User = {
   username: string;
 };
 
+type Album = {
+  userId: number;
+};
+
 const Home = () => {
   const [users, setUsers] = useState<User[]>([]);
-  const [albums, setAlbums] = useState([]);
+  const [albums, setAlbums] = useState<Album[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Fetch users and albums on component mount
@@ -49,13 +54,13 @@ const Home = () => {
       </h1>
 
       {loading ? (
-        <p className="text-center">Loading users...</p>
+        <LoadingSpinner loading={loading} />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {users.map((user) => (
             <div
               key={user.id}
-              className="p-4 bg-white rounded shadow hover:shadow-md"
+              className="p-4 bg-white rounded shadow hover:shadow-md hover:scale-105 transition-transform cursor-pointer"
             >
               <h2 className="text-lg font-bold text-[#351D5B]">{user?.name}</h2>
               <p className="text-gray-600">{user?.email}</p>
