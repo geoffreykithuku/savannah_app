@@ -13,6 +13,7 @@ import PrivateRoute from './components/PrivateRoute';
 import { useAuth } from './context/AuthContext';
 import UserDetails from './pages/User';
 import Albums from './pages/MyAlbums';
+import AlbumDetails from './pages/Album';
 
 const App = () => {
   const { user } = useAuth();
@@ -25,7 +26,7 @@ const App = () => {
           <Route element={<PrivateRoute />}>
             <Route path="/users/:id" element={<UserDetails />} />
             <Route path="/albums" element={<Albums />} />
-            
+            <Route path="/albums/:id" element={<AlbumDetails />} />
           </Route>
           <Route path="/login" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />

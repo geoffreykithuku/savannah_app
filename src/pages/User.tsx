@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import api from '../hooks/api';
 import LoadingSpinner from '../components/Spinner';
 
@@ -58,15 +58,19 @@ const UserDetails = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {albums.length > 0 ? (
               albums.map((album: any) => (
-                <div key={album._id} className="bg-white p-6 rounded shadow">
+                <Link
+                  to={`/albums/${album._id}`}
+                  key={album._id}
+                  className="bg-white p-6 rounded shadow"
+                >
                   <h3 className="text-lg font-semibold text-[#351D5B]">
                     {album.title}
                   </h3>
                   <p>{album.description}</p>
-                </div>
+                </Link>
               ))
             ) : (
-              <p>No albums found</p>
+              <p>This user has no albums yet.</p>
             )}
           </div>
         </>

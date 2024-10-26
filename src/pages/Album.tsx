@@ -26,11 +26,11 @@ const AlbumDetails = () => {
       try {
         // Fetch album details
         const albumResponse = await api.get(`/albums/${id}`);
-        setAlbum(albumResponse.data);
+        setAlbum(albumResponse.data.album);
 
         // Fetch album photos
         const photosResponse = await api.get(`/photos/album/${id}`);
-        setPhotos(photosResponse.data);
+        setPhotos(photosResponse.data.photos);
       } catch (error) {
         console.error('Error fetching album or photos:', error);
       } finally {
@@ -46,14 +46,14 @@ const AlbumDetails = () => {
       {loading ? <LoadingSpinner loading={loading} /> : null}
       {album && (
         <>
-          <h1 className="text-2xl font-bold py-6 text-[#351D5B]">
+          <h1 className="text-xl font-bold py-6 text-[#351D5B]">
             Album: {album.title}
           </h1>
           <div className="bg-white p-6 rounded shadow mb-6">
             <h2 className="text-xl font-semibold text-[#351D5B]">
               Album Details
             </h2>
-            <p>{album.description}</p>
+            <p>{album.title}</p>
           </div>
 
           <h2 className="text-xl font-bold mb-4 text-[#351D5B]">Photos</h2>

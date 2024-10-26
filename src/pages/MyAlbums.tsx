@@ -65,7 +65,7 @@ const Albums = () => {
             </div>
           ))
         ) : (
-          <p>No albums found</p>
+          <p>You have no albums yet.</p>
         )}
       </div>
     </div>
