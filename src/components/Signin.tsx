@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import axios from 'axios';
+import api from '../hooks/api';
 import { ClipLoader } from 'react-spinners';
 import { useAuth } from '../context/AuthContext';
-const backend_url = import.meta.env.VITE_BACKEND_URL as string;
 
 const Signin = () => {
   const navigate = useNavigate();
@@ -29,8 +28,8 @@ const Signin = () => {
     setLoading(true);
     try {
       //  API call to signin the user
-      const response = await axios.post(
-        `${backend_url}/users/signin`,
+      const response = await api.post(
+        `/users/signin`,
         formData
       );
       if (response.status === 200) {

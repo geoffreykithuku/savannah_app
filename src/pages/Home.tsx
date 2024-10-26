@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import api from '../hooks/api';
 import LoadingSpinner from '../components/Spinner';
 
-const backend_url = import.meta.env.VITE_BACKEND_URL as string;
 type User = {
   id: number;
   name: string;
@@ -24,11 +23,11 @@ const Home = () => {
     const fetchUsersAndAlbums = async () => {
       try {
         // Fetch users
-        const usersResponse = await api.get(`${backend_url}/users/all`);
+        const usersResponse = await api.get(`/users/all`);
         setUsers(usersResponse.data);
 
         // Fetch albums
-        const albumsResponse = await api.get(`${backend_url}/albums/all`);
+        const albumsResponse = await api.get(`/albums/all`);
         setAlbums(albumsResponse.data);
       } catch (error) {
         console.error('Error fetching users or albums:', error);
@@ -48,9 +47,9 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-2xl font-bold text-center mb-6 text-[#351D5B]">
-        Users
+    <div className="min-h-screen bg-gray-100 px-5 sm:px-10 md:px-20">
+      <h1 className="text-xl font-bold py-6 text-[#351D5B]">
+        Users along with their albums
       </h1>
 
       {loading ? (
