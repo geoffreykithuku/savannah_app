@@ -15,6 +15,7 @@ const Signup = () => {
     confirmPassword: '',
   });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const { setUser, setAuthToken } = useAuth();
 
@@ -33,6 +34,8 @@ const Signup = () => {
       return;
     }
 
+    setLoading(true);
+
     try {
       // API call to signup the user here
       const response = await axios.post(
@@ -40,6 +43,7 @@ const Signup = () => {
         formData
       );
       if (response.status === 201) {
+        setLoading(false);
         const { user, token } = response.data;
         setUser(user);
         setAuthToken(token);
@@ -52,11 +56,13 @@ const Signup = () => {
         const errorData = response.data;
         setError(errorData.msg || 'Signup failed');
         toast.error(errorData.msg || 'Signup failed');
+        setLoading(false);
       }
     } catch (err) {
       setError('Network error');
       toast.error('Network error');
       console.log(err);
+      setLoading(false);
     }
   };
 
@@ -117,7 +123,7 @@ const Signup = () => {
             type="submit"
             className="w-full py-2 bg-[#9FC315] hover:bg-[#8DB40F] rounded text-white font-bold"
           >
-            Sign Up
+            {loading ? 'Signing up...' : 'Sign Up'}
           </button>
         </form>
         <p className="text-center">

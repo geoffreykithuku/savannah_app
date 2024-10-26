@@ -13,6 +13,7 @@ const Signin = () => {
   });
   const [error, setError] = useState('');
   const { setUser, setAuthToken } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -24,6 +25,7 @@ const Signin = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    setLoading(true);
     try {
       //  API call to signin the user
       const response = await axios.post(
@@ -31,6 +33,7 @@ const Signin = () => {
         formData
       );
       if (response.status === 200) {
+        setLoading(false);
         const { user, token } = response.data;
         setUser(user);
         setAuthToken(token);
@@ -40,14 +43,18 @@ const Signin = () => {
         toast.success('Signin successful');
         navigate('/');
       } else {
+
         const errorData = response.data;
         setError(errorData.msg || 'Signin failed');
         toast.error(errorData.msg || 'Signin failed');
+
+        setLoading(false);
       }
     } catch (err) {
       setError('Network error');
       toast.error('Network error');
       console.log(err);
+      setLoading(false);
     }
   };
 
@@ -81,7 +88,7 @@ const Signin = () => {
             type="submit"
             className="w-full py-2 bg-[#9FC315] hover:bg-[#8DB40F] rounded text-white font-bold"
           >
-            Sign In
+            {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
         <p className="text-center">

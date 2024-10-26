@@ -13,11 +13,11 @@ const Home = () => {
     const fetchUsersAndAlbums = async () => {
       try {
         // Fetch users
-        const usersResponse = await axios.get(`${backend_url}/api/users`);
+        const usersResponse = await axios.get(`${backend_url}/api/users/all`);
         setUsers(usersResponse.data);
 
         // Fetch albums
-        const albumsResponse = await axios.get(`${backend_url}/api/albums`);
+        const albumsResponse = await axios.get(`${backend_url}/api/albums/all`);
         setAlbums(albumsResponse.data);
       } catch (error) {
         console.error('Error fetching users or albums:', error);
