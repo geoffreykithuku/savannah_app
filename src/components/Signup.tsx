@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 const backend_url = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -34,23 +35,21 @@ const Signup = () => {
 
     try {
       // API call to signup the user here
-      const response = await fetch(`${backend_url}/users/signup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        const { user, token } = await response.json();
+      const response = await axios.post(
+        `${backend_url}/users/signup`,
+        formData
+      );
+      if (response.status === 201) {
+        const { user, token } = response.data;
         setUser(user);
         setAuthToken(token);
         // save user and token to local storage
         localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('authToken', token);
-
         toast.success('Signup successful');
         navigate('/');
       } else {
-        const errorData = await response.json();
+        const errorData = response.data;
         setError(errorData.msg || 'Signup failed');
         toast.error(errorData.msg || 'Signup failed');
       }

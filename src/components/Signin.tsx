@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 const backend_url = import.meta.env.VITE_BACKEND_URL as string;
 
@@ -25,31 +26,28 @@ const Signin = () => {
 
     try {
       //  API call to signin the user
-      const response = await fetch(`${backend_url}/users/signin`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        const { user, token } = await response.json();
+      const response = await axios.post(
+        `${backend_url}/users/signin`,
+        formData
+      );
+      if (response.status === 200) {
+        const { user, token } = response.data;
         setUser(user);
         setAuthToken(token);
         // save user and token to local storage
         localStorage.setItem('user', JSON.stringify(user));
-
         localStorage.setItem('authToken', token);
         toast.success('Signin successful');
         navigate('/');
       } else {
-        const errorData = await response.json();
+        const errorData = response.data;
         setError(errorData.msg || 'Signin failed');
         toast.error(errorData.msg || 'Signin failed');
       }
     } catch (err) {
       setError('Network error');
-      console.log(err);
       toast.error('Network error');
+      console.log(err);
     }
   };
 
