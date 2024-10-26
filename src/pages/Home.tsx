@@ -2,9 +2,15 @@ import { useEffect, useState } from 'react';
 import api from '../hooks/api';
 
 const backend_url = import.meta.env.VITE_BACKEND_URL as string;
+type User = {
+  id: number;
+  name: string;
+  email: string;
+  username: string;
+};
 
 const Home = () => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [albums, setAlbums] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -30,8 +36,10 @@ const Home = () => {
   }, []);
 
   // Function to get album count for a user
-  const getUserAlbumCount = (userId) => {
-    return albums.filter((album) => album.userId === userId).length;
+  const getUserAlbumCount = (userId: number) => {
+    return albums.length > 0
+      ? albums.filter((album) => album?.userId === userId).length
+      : 0;
   };
 
   return (
@@ -45,14 +53,17 @@ const Home = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {users.map((user) => (
-            <div key={user.id} className="p-4 bg-white rounded shadow">
-              <h2 className="text-lg font-bold text-[#351D5B]">{user.name}</h2>
-              <p className="text-gray-600">{user.email}</p>
+            <div
+              key={user.id}
+              className="p-4 bg-white rounded shadow hover:shadow-md"
+            >
+              <h2 className="text-lg font-bold text-[#351D5B]">{user?.name}</h2>
+              <p className="text-gray-600">{user?.email}</p>
               <p className="mt-2">
-                <strong>Username:</strong> {user.username}
+                <strong>Username:</strong> {user?.username}
               </p>
               <p className="mt-2">
-                <strong>Albums:</strong> {getUserAlbumCount(user.id)}
+                <strong>Albums:</strong> {getUserAlbumCount(user?.id)}
               </p>
             </div>
           ))}
