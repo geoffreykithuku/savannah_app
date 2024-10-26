@@ -83,7 +83,7 @@ const Albums = () => {
         </Modal>
       )}
 
-      {component === 'album' && (
+      {component === 'album' && user?._id && (
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
           <AlbumForm
             album={null}
