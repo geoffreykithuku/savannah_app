@@ -11,6 +11,7 @@ import Signin from './components/Signin';
 import Signup from './components/Signup';
 import PrivateRoute from './components/PrivateRoute';
 import { useAuth } from './context/AuthContext';
+import UserDetails from './pages/User';
 
 const App = () => {
   const { user } = useAuth();
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/" element={user ? <Home /> : <Landing />} />
           <Route element={<PrivateRoute />}></Route>
           <Route path="/login" element={<Signin />} />
+          <Route path="/users/:id" element={<UserDetails />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/about" element={<Landing />} />
           <Route path="*" element={<NotFound />} />
