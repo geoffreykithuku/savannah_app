@@ -37,7 +37,7 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photo, onSuccess }) => {
     };
 
     fetchAlbums();
-  }, []);
+  }, [user?._id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

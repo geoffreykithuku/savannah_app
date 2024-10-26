@@ -10,10 +10,16 @@ type User = {
   username: string;
 };
 
+type Album = {
+  _id: string;
+  title: string;
+  userId: string;
+};
+
 const UserDetails = () => {
   const { id } = useParams();
   const [user, setUser] = useState<User | null>(null);
-  const [albums, setAlbums] = useState([]);
+  const [albums, setAlbums] = useState<Album[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -57,7 +63,7 @@ const UserDetails = () => {
           <h2 className="text-xl font-bold mb-4 text-[#351D5B]">Albums</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {albums.length > 0 ? (
-              albums.map((album: any) => (
+              albums.map((album) => (
                 <Link
                   to={`/albums/${album._id}`}
                   key={album._id}
@@ -66,7 +72,6 @@ const UserDetails = () => {
                   <h3 className="text-lg font-semibold text-[#351D5B]">
                     {album.title}
                   </h3>
-                  <p>{album.description}</p>
                 </Link>
               ))
             ) : (

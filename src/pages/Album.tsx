@@ -47,7 +47,7 @@ const AlbumDetails = () => {
     };
 
     fetchAlbumData();
-  }, [id]);
+  }, [id, album?.userId]);
 
   return (
     <div className="min-h-screen bg-gray-100 px-5 sm:px-10 md:px-20">
