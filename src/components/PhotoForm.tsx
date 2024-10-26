@@ -1,41 +1,84 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../hooks/api';
-interface PhotoFormProps {
-    photo: { _id: number; title: string; url: string } | null;
-    albumId: string;
-    onSuccess: () => void;
-}
+import { useAuth } from '../context/AuthContext';
+import { ClipLoader } from 'react-spinners';
 
-const PhotoForm: React.FC<PhotoFormProps> = ({ photo, albumId, onSuccess }) => {
+interface PhotoFormProps {
+  photo: { _id: number; title: string; url: string } | null;
+  onSuccess: () => void;
+}
+type Album = {
+  _id: string;
+  title: string;
+  userId: string;
+};
+
+const PhotoForm: React.FC<PhotoFormProps> = ({ photo, onSuccess }) => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [title, setTitle] = useState(photo ? photo.title : '');
   const [imageUrl, setImageUrl] = useState(photo ? photo.url : '');
+  const [albumId, setAlbumId] = useState<string>('');
+  const [albums, setAlbums] = useState<Album[]>([]);
   const isEditMode = Boolean(photo);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  useEffect(() => {
+    const fetchAlbums = async () => {
+      try {
+        const response = await api.get(`/albums/user/${user?._id}`);
+        setAlbums(response.data.albums);
+      } catch (error) {
+        toast.error('Failed to fetch albums');
+        console.error(error);
+      }
+    };
+
+    fetchAlbums();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    setLoading(true);
     try {
-        const response = await api.post(
-            `/photos${
-            isEditMode ? `/${photo?._id}` : ''
-            }`,
-            {
-            title,
-            url: imageUrl,
-            albumId,
-            }
-        );
-        if (response.status === 201) {
-            toast.success(isEditMode ? 'Photo updated' : 'Photo created');
-            onSuccess();
-            navigate('/albums');
+      if (isEditMode) {
+        const response = await api.put(`/photos/${photo?._id}`, {
+          title,
+          imageUrl,
+          albumId,
+        });
+        if (response.status === 200) {
+          setLoading(false);
+          toast.success('Photo updated');
+          onSuccess();
+          navigate('/photos');
         } else {
-            const errorData = response.data;
-            toast.error(errorData.msg || 'Operation failed');
+          setLoading(false);
+          const errorData = response.data;
+          toast.error(errorData.msg || 'Operation failed');
         }
+        return;
+      }
+      const response = await api.post(`/photos/create`, {
+        title,
+        imageUrl,
+        albumId,
+      });
+      if (response.status === 201) {
+        setLoading(false);
+        toast.success('Photo created');
+        onSuccess();
+        navigate('/photos');
+      } else {
+        setLoading(false);
+        const errorData = response.data;
+        toast.error(errorData.msg || 'Operation failed');
+      }
     } catch (error) {
+      setLoading(false);
       toast.error('Network error');
       console.error(error);
     }
@@ -65,11 +108,36 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photo, albumId, onSuccess }) => {
         required
         className="w-full px-3 py-2 border rounded"
       />
+      <select
+        value={albumId}
+        onChange={(e) => setAlbumId(e.target.value)}
+        required
+        className="w-full px-3 py-2 border rounded"
+      >
+        <option value="">Select an Album</option>
+        {albums.map((album) => (
+          <option key={album._id} value={album._id}>
+            {album.title}
+          </option>
+        ))}
+      </select>
       <button
         type="submit"
-        className="w-full py-2 bg-blue-500 text-white rounded"
+              className="w-full py-2 bg-[#351D5B]
+         text-white rounded"
       >
-        {isEditMode ? 'Update Photo' : 'Create Photo'}
+        {loading ? (
+          <span className="flex justify-center items-center gap-5">
+            <ClipLoader color="#ffffff" loading={loading} size={20} />
+            <span className="ml-2">
+              {isEditMode ? 'Updating...' : 'Creating...'}
+            </span>
+          </span>
+        ) : isEditMode ? (
+          'Update'
+        ) : (
+          'Create'
+        )}
       </button>
     </form>
   );

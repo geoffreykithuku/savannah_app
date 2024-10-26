@@ -6,7 +6,8 @@ import LoadingSpinner from '../components/Spinner';
 type Photo = {
   _id: string;
   title: string;
-  url: string;
+  imageUrl: string;
+  albumId: string;
 };
 
 type Album = {
@@ -62,7 +63,7 @@ const AlbumDetails = () => {
               photos.map((photo) => (
                 <div key={photo._id} className="bg-white p-6 rounded shadow">
                   <img
-                    src={photo.url}
+                    src={photo.imageUrl}
                     alt={photo.title}
                     className="w-full h-40 object-cover rounded mb-4"
                   />

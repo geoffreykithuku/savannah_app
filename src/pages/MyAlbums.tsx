@@ -4,6 +4,8 @@ import AlbumForm from '../components/AlbumForm';
 import Modal from '../components/Modal';
 import LoadingSpinner from '../components/Spinner';
 import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
+import PhotoForm from '../components/PhotoForm';
 type Album = {
   _id: string;
   title: string;
@@ -14,6 +16,7 @@ const Albums = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useAuth();
+  const [component, setComponent] = useState<string>('album');
 
   const fetchAlbums = async () => {
     try {
@@ -35,26 +38,68 @@ const Albums = () => {
     fetchAlbums();
   };
 
+  const handlePhotoCreated = () => {
+    setIsModalOpen(false);
+    fetchAlbums();
+  };
+
+  // since the modal is used for both album and photo creation, we need to pass the correct
+  // form component based on the modal state
+
+  const handleModalContent = (value) => {
+    setComponent(value);
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 px-5 sm:px-10 md:px-20">
-      <button
-        className="bg-[#351D5B]
+      <span className="flex justify-start items-center gap-5">
+        <button
+          className="bg-[#351D5B]
          text-white px-4 py-2 rounded my-6"
-        onClick={() => setIsModalOpen(true)}
-      >
-        Create Album
-      </button>
+          onClick={() => {
+            setIsModalOpen(true);
+            handleModalContent('album');
+          }}
+        >
+          Create Album
+        </button>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <AlbumForm
-          album={null}
-          userId={user?._id}
-          onSuccess={handleAlbumCreated}
-        />
-      </Modal>
+        {albums.length > 0 && (
+          <button
+            className="bg-[#351D5B] text-white px-4 py-2 rounded my-6"
+            onClick={() => {
+              setIsModalOpen(true);
+              handleModalContent('photo');
+            }}
+          >
+            Add Photo
+          </button>
+        )}
+      </span>
 
+      {component === 'photo' && (
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <PhotoForm photo={null} onSuccess={handlePhotoCreated} />
+        </Modal>
+      )}
+
+      {component === 'album' && (
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <AlbumForm
+            album={null}
+            userId={user?._id}
+            onSuccess={handleAlbumCreated}
+          />
+        </Modal>
+      )}
       {loading ? <LoadingSpinner loading={loading} /> : null}
-      <h1 className="text-xl font-bold mb-4 text-[#351D5B]">Your Albums</h1>
+      <h1 className="text-xl font-bold mb-4 text-[#351D5B]">
+        Your albums and photos.
+      </h1>
+      <p>
+        You can create albums and add photos to them. Also you can edit photos
+        and delete them.
+      </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {albums.length > 0 ? (
           albums.map((album) => (
@@ -62,6 +107,9 @@ const Albums = () => {
               <h3 className="text-lg font-semibold text-[#351D5B]">
                 {album?.title}
               </h3>
+              <Link to={`/albums/${album._id}`} className="text-blue-500">
+                View Album
+              </Link>
             </div>
           ))
         ) : (
