@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
 import api from '../hooks/api';
 import LoadingSpinner from '../components/Spinner';
+import { Link } from 'react-router-dom';
 
 type User = {
-  id: number;
+  _id: string;
   name: string;
   email: string;
   username: string;
 };
 
 type Album = {
-  userId: number;
+  userId: string;
 };
 
 const Home = () => {
@@ -40,7 +41,7 @@ const Home = () => {
   }, []);
 
   // Function to get album count for a user
-  const getUserAlbumCount = (userId: number) => {
+  const getUserAlbumCount = (userId: string) => {
     return albums.length > 0
       ? albums.filter((album) => album?.userId === userId).length
       : 0;
@@ -57,8 +58,9 @@ const Home = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {users.map((user) => (
-            <div
-              key={user.id}
+            <Link
+              to={`/users/${user._id}`}
+              key={user._id}
               className="p-4 bg-white rounded shadow hover:shadow-md hover:scale-105 transition-transform cursor-pointer"
             >
               <h2 className="text-lg font-bold text-[#351D5B]">{user?.name}</h2>
@@ -67,9 +69,10 @@ const Home = () => {
                 <strong>Username:</strong> {user?.username}
               </p>
               <p className="mt-2">
-                <strong>Albums:</strong> {getUserAlbumCount(user?.id)}
+                <strong>Albums:</strong> {getUserAlbumCount(user?._id)}
               </p>
-            </div>
+              
+            </Link>
           ))}
         </div>
       )}
