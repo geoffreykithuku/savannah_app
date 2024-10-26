@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../hooks/api';
 import LoadingSpinner from '../components/Spinner';
+import { ClipLoader } from 'react-spinners';
 
 type Photo = {
   _id: string;
   title: string;
-  url: string;
+  imageUrl: string;
 };
 
 const PhotoDetails = () => {
@@ -20,8 +21,8 @@ const PhotoDetails = () => {
     const fetchPhoto = async () => {
       try {
         const response = await api.get(`/photos/${id}`);
-        setPhoto(response.data);
-        setNewTitle(response.data.title);
+        setPhoto(response.data.photo);
+        setNewTitle(response.data.photo.title);
       } catch (error) {
         console.error('Error fetching photo:', error);
       } finally {
@@ -37,13 +38,16 @@ const PhotoDetails = () => {
   };
 
   const handleSave = async () => {
+    setLoading(true);
     try {
-      await api.patch(`/photos/${id}`, { title: newTitle });
+      await api.patch(`/photos/update/${id}`, { title: newTitle });
       setPhoto((prevPhoto) =>
         prevPhoto ? { ...prevPhoto, title: newTitle } : null
       );
       setEditing(false);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error('Error updating photo title:', error);
     }
   };
@@ -56,9 +60,9 @@ const PhotoDetails = () => {
           <h1 className="text-2xl font-bold py-6 text-[#351D5B]">
             Photo Details
           </h1>
-          <div className="bg-white p-6 rounded shadow mb-6">
+          <div className="bg-white p-6 rounded shadow mb-6 flex flex-col gap-4">
             <img
-              src={photo.url}
+              src={photo.imageUrl}
               alt={photo.title}
               className="w-full h-80 object-cover rounded mb-4"
             />
@@ -73,9 +77,17 @@ const PhotoDetails = () => {
                 />
                 <button
                   onClick={handleSave}
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  className="bg-[#351D5B]
+                   text-white px-4 py-2 rounded"
                 >
-                  Save
+                  {loading ? (
+                    <span className="flex items-center gap-2">
+                      <ClipLoader size={15} color="#fff" />
+                      <p>Saving...</p>
+                    </span>
+                  ) : (
+                    'Save'
+                  )}
                 </button>
               </div>
             ) : (
@@ -85,7 +97,7 @@ const PhotoDetails = () => {
                 </h2>
                 <button
                   onClick={handleEdit}
-                  className="bg-yellow-500 text-white px-4 py-2 rounded"
+                  className="bg-[#9FC315] text-white px-4 py-2 rounded"
                 >
                   Edit Title
                 </button>

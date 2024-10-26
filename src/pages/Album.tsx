@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import api from '../hooks/api';
 import LoadingSpinner from '../components/Spinner';
 
@@ -61,7 +61,11 @@ const AlbumDetails = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {photos.length > 0 ? (
               photos.map((photo) => (
-                <div key={photo._id} className="bg-white p-6 rounded shadow">
+                <Link
+                  to={`/photos/${photo._id}`}
+                  key={photo._id}
+                  className="bg-white p-6 rounded shadow"
+                >
                   <img
                     src={photo.imageUrl}
                     alt={photo.title}
@@ -70,7 +74,7 @@ const AlbumDetails = () => {
                   <h3 className="text-lg font-semibold text-[#351D5B]">
                     {photo.title}
                   </h3>
-                </div>
+                </Link>
               ))
             ) : (
               <p>No photos found</p>
