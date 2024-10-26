@@ -28,10 +28,7 @@ const Signin = () => {
     setLoading(true);
     try {
       //  API call to signin the user
-      const response = await api.post(
-        `/users/signin`,
-        formData
-      );
+      const response = await api.post(`/users/signin`, formData);
       if (response.status === 200) {
         setLoading(false);
         const { user, token } = response.data;

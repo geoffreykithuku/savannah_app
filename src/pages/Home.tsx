@@ -40,8 +40,6 @@ const Home = () => {
     fetchUsersAndAlbums();
   }, []);
 
-
-
   // Function to get album count for a user
   const getUserAlbumCount = (userId: string) => {
     return albums.length > 0
@@ -54,6 +52,11 @@ const Home = () => {
       <h1 className="text-xl font-bold py-6 text-[#351D5B]">
         Users along with their albums
       </h1>
+      <p className="text-gray-600 mb-6">
+        To create your albums and photos, please visit <Link className='
+        text-[#a484d8] underline' to="/albums">My Albums</Link> page.
+      
+      </p>
 
       {loading ? (
         <LoadingSpinner loading={loading} />
@@ -63,7 +66,7 @@ const Home = () => {
             <Link
               to={`/users/${user._id}`}
               key={user._id}
-              className="p-4 bg-white rounded shadow hover:shadow-md hover:scale-105 transition-transform cursor-pointer"
+              className="p-4 bg-white rounded shadow hover:shadow-md hover:scale-105 transition-transform cursor-pointer w-full min-w-fit"
             >
               <h2 className="text-lg font-bold text-[#351D5B]">{user?.name}</h2>
               <p className="text-gray-600">{user?.email}</p>

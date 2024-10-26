@@ -17,6 +17,9 @@ const PhotoDetails = () => {
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // another loading state for save button
+  const [saving, setSaving] = useState(false);
+
   useEffect(() => {
     const fetchPhoto = async () => {
       try {
@@ -38,16 +41,16 @@ const PhotoDetails = () => {
   };
 
   const handleSave = async () => {
-    setLoading(true);
+    setSaving(true);
     try {
       await api.patch(`/photos/update/${id}`, { title: newTitle });
       setPhoto((prevPhoto) =>
         prevPhoto ? { ...prevPhoto, title: newTitle } : null
       );
       setEditing(false);
-      setLoading(false);
+      setSaving(false);
     } catch (error) {
-      setLoading(false);
+      setSaving(false);
       console.error('Error updating photo title:', error);
     }
   };
@@ -80,7 +83,7 @@ const PhotoDetails = () => {
                   className="bg-[#351D5B]
                    text-white px-4 py-2 rounded"
                 >
-                  {loading ? (
+                  {saving ? (
                     <span className="flex items-center gap-2">
                       <ClipLoader size={15} color="#fff" />
                       <p>Saving...</p>

@@ -96,9 +96,9 @@ const Albums = () => {
       <h1 className="text-xl font-bold mb-4 text-[#351D5B]">
         Your albums and photos.
       </h1>
-      <p className='text-gray-600 mb-4'>
+      <p className="text-gray-600 mb-4">
         You can create albums and add photos to them. Also you can edit photos
-        and delete them.
+        title.
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {albums.length > 0 ? (

@@ -123,7 +123,7 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photo, onSuccess }) => {
       </select>
       <button
         type="submit"
-              className="w-full py-2 bg-[#351D5B]
+        className="w-full py-2 bg-[#351D5B]
          text-white rounded"
       >
         {loading ? (

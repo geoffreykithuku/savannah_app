@@ -13,7 +13,7 @@ type Photo = {
 type Album = {
   _id: string;
   title: string;
-  description: string;
+  userId: string;
 };
 
 const AlbumDetails = () => {
@@ -21,6 +21,7 @@ const AlbumDetails = () => {
   const [album, setAlbum] = useState<Album | null>(null);
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState(true);
+  const [creator, setCreator] = useState('');
 
   useEffect(() => {
     const fetchAlbumData = async () => {
@@ -32,6 +33,12 @@ const AlbumDetails = () => {
         // Fetch album photos
         const photosResponse = await api.get(`/photos/album/${id}`);
         setPhotos(photosResponse.data.photos);
+
+        // Fetch creator name
+        console.log('starting fetch');
+        const creator = await api.get(`/users/${album?.userId}`);
+        console.log('creator:', creator);
+        setCreator(creator.data.name);
       } catch (error) {
         console.error('Error fetching album or photos:', error);
       } finally {
@@ -54,7 +61,10 @@ const AlbumDetails = () => {
             <h2 className="text-xl font-semibold text-[#351D5B]">
               Album Details
             </h2>
-            <p>{album.title}</p>
+            <p className="text-sm  text-[#626064] ">
+              Name: {album.title}
+            </p>
+            <p className="text-[#626064] text-sm">Created by: {creator}</p>
           </div>
 
           <h2 className="text-xl font-bold mb-4 text-[#351D5B]">Photos</h2>
