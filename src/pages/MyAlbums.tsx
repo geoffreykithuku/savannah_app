@@ -1,20 +1,14 @@
 import { useEffect, useState } from 'react';
 import api from '../hooks/api';
 import AlbumForm from '../components/AlbumForm';
+import Modal from '../components/Modal';
 import LoadingSpinner from '../components/Spinner';
 import { useAuth } from '../context/AuthContext';
 
-type Album = {
-  _id: string;
-  title: string;
-  description: string;
-};
-
 const Albums = () => {
-  const [albums, setAlbums] = useState<Album[]>([]);
+  const [albums, setAlbums] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useAuth();
 
   const fetchAlbums = async () => {
@@ -33,26 +27,27 @@ const Albums = () => {
   }, []);
 
   const handleAlbumCreated = () => {
-    setShowForm(false);
-    fetchAlbums(); 
+    setIsModalOpen(false);
+    fetchAlbums();
   };
 
   return (
     <div className="min-h-screen bg-gray-100 px-5 sm:px-10 md:px-20">
       <button
-        className="bg-[#351D5B] text-white px-4 py-2 rounded my-6"
-        onClick={() => setShowForm(true)}
+              className="bg-[#351D5B]
+         text-white px-4 py-2 rounded my-6"
+        onClick={() => setIsModalOpen(true)}
       >
         Create Album
       </button>
 
-      {showForm && (
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <AlbumForm
           album={null}
-          userId={user?._id}
+          userId="{user?._id}"
           onSuccess={handleAlbumCreated}
         />
-      )}
+      </Modal>
 
       {loading ? <LoadingSpinner loading={loading} /> : null}
       <h1 className="text-xl font-bold mb-4 text-[#351D5B]">Your Albums</h1>
