@@ -46,7 +46,7 @@ const Albums = () => {
   // since the modal is used for both album and photo creation, we need to pass the correct
   // form component based on the modal state
 
-  const handleModalContent = (value) => {
+  const handleModalContent = (value: string) => {
     setComponent(value);
   };
 

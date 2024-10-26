@@ -18,7 +18,7 @@ const AlbumForm: React.FC<AlbumFormProps> = ({ album, userId, onSuccess }) => {
   const isEditMode = Boolean(album);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
