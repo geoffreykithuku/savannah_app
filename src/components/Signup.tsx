@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import api from '../hooks/api';
+import { ClipLoader } from 'react-spinners';
 import { useAuth } from '../context/AuthContext';
-const backend_url = import.meta.env.VITE_BACKEND_URL as string;
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const Signup = () => {
     confirmPassword: '',
   });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const { setUser, setAuthToken } = useAuth();
 
@@ -32,32 +34,32 @@ const Signup = () => {
       return;
     }
 
+    setLoading(true);
+
     try {
       // API call to signup the user here
-      const response = await fetch(`${backend_url}/users/signup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        const { user, token } = await response.json();
+      const response = await api.post(`/users/signup`, formData);
+      if (response.status === 201) {
+        setLoading(false);
+        const { user, token } = response.data;
         setUser(user);
         setAuthToken(token);
         // save user and token to local storage
         localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('authToken', token);
-
         toast.success('Signup successful');
         navigate('/');
       } else {
-        const errorData = await response.json();
+        const errorData = response.data;
         setError(errorData.msg || 'Signup failed');
         toast.error(errorData.msg || 'Signup failed');
+        setLoading(false);
       }
     } catch (err) {
       setError('Network error');
       toast.error('Network error');
       console.log(err);
+      setLoading(false);
     }
   };
 
@@ -118,7 +120,13 @@ const Signup = () => {
             type="submit"
             className="w-full py-2 bg-[#9FC315] hover:bg-[#8DB40F] rounded text-white font-bold"
           >
-            Sign Up
+            {loading ? (
+              <span>
+                <ClipLoader color="#fff" size={20} /> Signing up...
+              </span>
+            ) : (
+              'Sign Up'
+            )}
           </button>
         </form>
         <p className="text-center">

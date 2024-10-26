@@ -7,9 +7,8 @@ test('renders app', () => {
   render(
     <AuthProvider>
       {' '}
-     
       <App />
     </AuthProvider>
   );
-  expect(true).toBe(true); 
+  expect(true).toBe(true);
 });

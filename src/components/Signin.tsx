@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import api from '../hooks/api';
+import { ClipLoader } from 'react-spinners';
 import { useAuth } from '../context/AuthContext';
-const backend_url = import.meta.env.VITE_BACKEND_URL as string;
 
 const Signin = () => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ const Signin = () => {
   });
   const [error, setError] = useState('');
   const { setUser, setAuthToken } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -23,33 +25,32 @@ const Signin = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    setLoading(true);
     try {
       //  API call to signin the user
-      const response = await fetch(`${backend_url}/users/signin`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        const { user, token } = await response.json();
+      const response = await api.post(`/users/signin`, formData);
+      if (response.status === 200) {
+        setLoading(false);
+        const { user, token } = response.data;
         setUser(user);
         setAuthToken(token);
         // save user and token to local storage
         localStorage.setItem('user', JSON.stringify(user));
-
         localStorage.setItem('authToken', token);
         toast.success('Signin successful');
         navigate('/');
       } else {
-        const errorData = await response.json();
+        const errorData = response.data;
         setError(errorData.msg || 'Signin failed');
         toast.error(errorData.msg || 'Signin failed');
+
+        setLoading(false);
       }
     } catch (err) {
       setError('Network error');
-      console.log(err);
       toast.error('Network error');
+      console.log(err);
+      setLoading(false);
     }
   };
 
@@ -83,7 +84,14 @@ const Signin = () => {
             type="submit"
             className="w-full py-2 bg-[#9FC315] hover:bg-[#8DB40F] rounded text-white font-bold"
           >
-            Sign In
+            {loading ? (
+              <span className="flex justify-center items-center gap-5">
+                <ClipLoader color="#ffffff" loading={loading} size={20} />
+                <span className="ml-2">Signing in...</span>
+              </span>
+            ) : (
+              'Sign In'
+            )}
           </button>
         </form>
         <p className="text-center">

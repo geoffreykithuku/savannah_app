@@ -58,31 +58,9 @@ const Navbar: React.FC = () => {
                   style={({ isActive }: { isActive: boolean }) => {
                     return isActive ? { color: '#9FC315' } : {};
                   }}
-                  to="/users"
-                >
-                  Users
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  className="hover:text-[#9FC315]"
-                  style={({ isActive }: { isActive: boolean }) => {
-                    return isActive ? { color: '#9FC315' } : {};
-                  }}
                   to="/albums"
                 >
-                  Albums
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  className="hover:text-[#9FC315]"
-                  style={({ isActive }: { isActive: boolean }) => {
-                    return isActive ? { color: '#9FC315' } : {};
-                  }}
-                  to="/photos"
-                >
-                  Photos
+                  My albums
                 </NavLink>
               </li>
 
