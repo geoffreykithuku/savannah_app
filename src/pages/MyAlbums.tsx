@@ -4,9 +4,13 @@ import AlbumForm from '../components/AlbumForm';
 import Modal from '../components/Modal';
 import LoadingSpinner from '../components/Spinner';
 import { useAuth } from '../context/AuthContext';
-
+type Album = {
+  _id: string;
+  title: string;
+  userId: string;
+};
 const Albums = () => {
-  const [albums, setAlbums] = useState([]);
+  const [albums, setAlbums] = useState<Album[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useAuth();
@@ -14,7 +18,7 @@ const Albums = () => {
   const fetchAlbums = async () => {
     try {
       const response = await api.get(`/albums/user/${user?._id}`);
-      setAlbums(response.data);
+      setAlbums(response.data.albums);
     } catch (error) {
       console.error('Error fetching albums:', error);
     } finally {
@@ -34,7 +38,7 @@ const Albums = () => {
   return (
     <div className="min-h-screen bg-gray-100 px-5 sm:px-10 md:px-20">
       <button
-              className="bg-[#351D5B]
+        className="bg-[#351D5B]
          text-white px-4 py-2 rounded my-6"
         onClick={() => setIsModalOpen(true)}
       >
@@ -44,7 +48,7 @@ const Albums = () => {
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <AlbumForm
           album={null}
-          userId="{user?._id}"
+          userId={user?._id}
           onSuccess={handleAlbumCreated}
         />
       </Modal>
@@ -56,7 +60,7 @@ const Albums = () => {
           albums.map((album) => (
             <div key={album._id} className="bg-white p-6 rounded shadow">
               <h3 className="text-lg font-semibold text-[#351D5B]">
-                {album.title}
+                {album?.title}
               </h3>
             </div>
           ))

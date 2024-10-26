@@ -1,39 +1,60 @@
-import { useState} from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
+import api from '../hooks/api';
+import { ClipLoader } from 'react-spinners';
 interface AlbumFormProps {
-    album: { id: number; title: string } | null;
-    userId: string;
-    onSuccess: () => void;
+  album: {
+    _id: number;
+    title: string;
+  } | null;
+  userId: string;
+  onSuccess: () => void;
 }
-    
 
 const AlbumForm: React.FC<AlbumFormProps> = ({ album, userId, onSuccess }) => {
   const navigate = useNavigate();
   const [title, setTitle] = useState(album ? album.title : '');
   const isEditMode = Boolean(album);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/albums${isEditMode ? `/${album.id}` : ''}`,
-        {
-          method: isEditMode ? 'PUT' : 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, userId }),
+      if (isEditMode) {
+        const response = await api.put(`/albums/${album?._id}`, {
+          title,
+        });
+        if (response.status === 200) {
+          setLoading(false);
+          toast.success('Album updated');
+          onSuccess();
+          navigate('/albums');
+        } else {
+          setLoading(false);
+          const errorData = response.data;
+          toast.error(errorData.msg || 'Operation failed');
         }
-      );
-      if (response.ok) {
-        toast.success(isEditMode ? 'Album updated' : 'Album created');
+        return;
+      }
+
+      const response = await api.post(`/albums/create`, {
+        title,
+        userId,
+      });
+      if (response.status === 201) {
+        setLoading(false);
+        toast.success('Album created');
         onSuccess();
         navigate('/albums');
       } else {
-        const errorData = await response.json();
+        setLoading(false);
+        const errorData = response.data;
         toast.error(errorData.msg || 'Operation failed');
       }
     } catch (error) {
+      setLoading(false);
       toast.error('Network error');
       console.error(error);
     }
@@ -57,9 +78,19 @@ const AlbumForm: React.FC<AlbumFormProps> = ({ album, userId, onSuccess }) => {
       />
       <button
         type="submit"
-        className="w-full py-2 bg-blue-500 text-white rounded"
+        className="w-full py-2 bg-[#351D5B]
+         text-white rounded"
       >
-        {isEditMode ? 'Update Album' : 'Create Album'}
+        {loading ? (
+          <span className="flex items-center justify-center gap-5">
+            <ClipLoader color="#ffffff" loading={loading} size={20} />{' '}
+            <p>{isEditMode ? 'Updating Album' : 'Creating Album'}</p>
+          </span>
+        ) : isEditMode ? (
+          'Update Album'
+        ) : (
+          'Create Album'
+        )}
       </button>
     </form>
   );

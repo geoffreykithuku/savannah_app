@@ -29,7 +29,7 @@ const Home = () => {
 
         // Fetch albums
         const albumsResponse = await api.get(`/albums/all`);
-        setAlbums(albumsResponse.data);
+        setAlbums(albumsResponse.data.albums);
       } catch (error) {
         console.error('Error fetching users or albums:', error);
       } finally {
@@ -39,6 +39,8 @@ const Home = () => {
 
     fetchUsersAndAlbums();
   }, []);
+
+
 
   // Function to get album count for a user
   const getUserAlbumCount = (userId: string) => {

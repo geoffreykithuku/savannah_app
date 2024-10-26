@@ -25,7 +25,7 @@ const UserDetails = () => {
 
         // Fetch user's albums
         const albumsResponse = await api.get(`/albums/user/${id}`);
-        setAlbums(albumsResponse.data);
+        setAlbums(albumsResponse.data.albums);
       } catch (error) {
         console.error('Error fetching user or albums:', error);
       } finally {
