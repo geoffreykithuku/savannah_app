@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 const PrivateRoute = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+
   useEffect(() => {
     if (!user) {
       navigate('/login');
